@@ -1,0 +1,30 @@
+export interface MqttPayload {
+  addressTo: string;
+  addressFrom: string;
+  command: string;
+  rpiStatus: string;
+  wifiStatus: string;
+  gsmStatus: string;
+  gpsLat: number;
+  gpsLon: number;
+  aprsCount: number;
+  cubeCount: number;
+  tempOutside: number;
+  tempInside: number;
+  humidityOutside: number;
+  humidityInside: number;
+  altitude: number;
+  pressure: number;
+  accelerometer: [number, number, number];
+  gyroscope: [number, number, number];
+  magneto: [number, number, number];
+  uvIndex: number;
+  batVoltageLvl: number;
+  batMaxCurrent: number;
+  batAvgCurrent: number;
+  batTemp: number;
+  batHeaterStatus: string;
+  dra818vFrequency: number;
+  dra818uFrequency: number;
+  runtime: number;
+}

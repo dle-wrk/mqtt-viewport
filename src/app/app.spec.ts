@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { FormsModule } from '@angular/forms';
+import { MqttService } from './mqtt.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App, FormsModule],
+      providers: [MqttService]
     }).compileComponents();
   });
 
@@ -18,6 +21,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, MQTTAndroidApp');
+    expect(compiled.querySelector('h1')?.textContent).toContain('MQTTAndroidApp');
   });
 });
