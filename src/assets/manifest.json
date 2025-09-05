@@ -1,0 +1,10 @@
+{
+    "name": "MQTTAndroidApp",
+    "short_name": "MQTTApp",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "description": "MQTTAndroidApp — lightweight Angular client for MQTT connections on Android.",
+    "theme_color": "#1976d2",
+    "icons": []
+}

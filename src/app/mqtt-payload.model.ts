@@ -1,30 +1,42 @@
 export interface MqttPayload {
-  addressTo: string;
-  addressFrom: string;
-  command: string;
-  rpiStatus: string;
-  wifiStatus: string;
-  gsmStatus: string;
-  gpsLat: number;
-  gpsLon: number;
-  aprsCount: number;
-  cubeCount: number;
-  tempOutside: number;
-  tempInside: number;
-  humidityOutside: number;
-  humidityInside: number;
-  altitude: number;
-  pressure: number;
-  accelerometer: [number, number, number];
-  gyroscope: [number, number, number];
-  magneto: [number, number, number];
-  uvIndex: number;
-  batVoltageLvl: number;
-  batMaxCurrent: number;
-  batAvgCurrent: number;
-  batTemp: number;
-  batHeaterStatus: string;
-  dra818vFrequency: number;
-  dra818uFrequency: number;
-  runtime: number;
+  a: {
+    "Device": String,
+    "From Address": String,
+    "To Address": String,
+    "Command": String,
+    "System Status": String,
+    "RPi Status": String,
+    "WiFi Status": String,
+    "GSM Status": String,
+    "APRS Radio": String,
+    "APRS TX Delay Time": String,
+    "LoRa TX Delay Time": String,
+    "Battery Heater Status": String,
+    "GPS LAT": Number,
+    "GPS LON": Number,
+    "APRS Packets Sent": Number,
+    "LoRa Packets Sent": Number,
+    "GSM Packets Sent": Number,
+    "Temperature Outside": Number,
+    "Temperature Inside": Number,
+    "Humidity Outside": Number,
+    "Humidity Inside": Number,
+    "Altitude": Number,
+    "Pressure": Number,
+    "Accelerometer": [Number, Number, Number],
+    "Gyroscope": [Number, Number, Number],
+    "Magnetometer": [Number, Number, Number],
+    "UV Index": Number,
+    "Battery Level": String,
+    "Battery Max Current Draw": String,
+    "Battery Avg Current Draw": String,
+    "Battery Temperature": Number,
+    "Battery Heater Current Draw": String,
+    "Images Taken": Number,
+    "Videos Taken": Number,
+    "Total Packets Sent": Number,
+    "Packets Received": Number,
+    "Runtime": String,
+    "CRC": String
+  }
 }

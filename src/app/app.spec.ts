@@ -1,13 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { FormsModule } from '@angular/forms';
 import { MqttService } from './mqtt.service';
 
 describe('App', () => {
+  let mqttServiceSpy: jasmine.SpyObj<MqttService>;
+
   beforeEach(async () => {
+    mqttServiceSpy = jasmine.createSpyObj('MqttService', ['sendMqttMessage']);
     await TestBed.configureTestingModule({
-      imports: [App, FormsModule],
-      providers: [MqttService]
+      imports: [App],
+      providers: [{ provide: MqttService, useValue: mqttServiceSpy }]
     }).compileComponents();
   });
 
