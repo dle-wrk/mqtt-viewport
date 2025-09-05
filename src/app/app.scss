@@ -59,7 +59,7 @@ button:disabled {
   border-collapse: collapse;
   margin-bottom: 24px;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .response-table th,
@@ -67,6 +67,12 @@ button:disabled {
   border: 1px solid #e0e0e0;
   padding: 8px 12px;
   text-align: left;
+  transition: color 0.5s;
+}
+
+.highlight {
+  color: #1db954 !important;
+  /* green */
 }
 
 .response-table th {

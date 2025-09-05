@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  standalone: true
+  standalone: true,
 })
 export class App {
   public readonly title = signal('MQTTAndroidApp');
@@ -18,8 +18,13 @@ export class App {
   public aerolinkTimer: number = 0;
   public luminaSTimer: number = 0;
 
+  public aerolinkHighlight = false;
+  public luminaSHighlight = false;
+
   private aerolinkInterval: any = null;
   private luminaSInterval: any = null;
+  private aerolinkHighlightTimeout: any = null;
+  private luminaSHighlightTimeout: any = null;
   private readonly countdownSeconds = 10;
 
   constructor(private mqttService: MqttService) {
@@ -27,11 +32,33 @@ export class App {
       if (topic.endsWith('/AeroLink/Response')) {
         this.aerolinkResponse = payload;
         this.resetAeroLinkTimer();
+        this.highlightAeroLink();
       } else if (topic.endsWith('/LuminaS/Response')) {
         this.luminaSResponse = payload;
         this.resetLuminaSTimer();
+        this.highlightLuminaS();
       }
     };
+  }
+
+  private highlightAeroLink() {
+    this.aerolinkHighlight = true;
+    if (this.aerolinkHighlightTimeout) {
+      clearTimeout(this.aerolinkHighlightTimeout);
+    }
+    this.aerolinkHighlightTimeout = setTimeout(() => {
+      this.aerolinkHighlight = false;
+    }, 3000);
+  }
+
+  private highlightLuminaS() {
+    this.luminaSHighlight = true;
+    if (this.luminaSHighlightTimeout) {
+      clearTimeout(this.luminaSHighlightTimeout);
+    }
+    this.luminaSHighlightTimeout = setTimeout(() => {
+      this.luminaSHighlight = false;
+    }, 3000);
   }
 
   private resetAeroLinkTimer() {
