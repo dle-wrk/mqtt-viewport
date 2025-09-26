@@ -26,7 +26,7 @@
               <strong>{{ key }}:</strong>
               <ng-container *ngIf="item.response.a[key] !== null; let value = item.response.a[key]; else nullValue">
                 <ng-container *ngIf="isArray(value); else notArray">
-                  {{ (value as Array<any>).join(', ') }}
+                  {{ value.join(', ') }}
                 </ng-container>
                 <ng-template #notArray>
                   {{ value }}
