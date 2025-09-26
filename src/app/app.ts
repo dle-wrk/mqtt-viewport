@@ -1,6 +1,16 @@
 import { Component, signal } from '@angular/core';
 import { MqttService } from './mqtt.service';
+import { MqttPayload } from './mqtt-payload.model';
 import { CommonModule } from '@angular/common';
+
+interface ResponseItem {
+  name: string;
+  topic: string;
+  status: string;
+  response: MqttPayload | null;
+  timer: number;
+  highlight: boolean;
+}
 
 @Component({
   selector: 'app-root',
@@ -12,7 +22,7 @@ import { CommonModule } from '@angular/common';
 export class App {
   public readonly title = signal('MQTTAndroidApp');
 
-  public responseItems = [
+  public responseItems: ResponseItem[] = [
     {
       name: 'AeroLink',
       topic: '/AeroLink/Response',
