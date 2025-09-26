@@ -1,47 +1,61 @@
 <div class="container">
-  <h1>{{ title() }}</h1>
+  <div class="connection-status">MQTT Connected</div>
   
-  <h2>Response Tracking</h2>
-  <table class="tracking-table">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Status</th>
-        <th>Timer</th>
-        <th>Response Data</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of responseItems">
-        <td>{{ item.name }}</td>
-        <td [class]="item.status === 'Received' ? 'status-received' : 'status-waiting'">
-          {{ item.status }}
-        </td>
-        <td>
-          <div class="timer" *ngIf="item.timer > 0">Next packet in: {{ item.timer }}s</div>
-        </td>
-        <td>
-          <div *ngIf="item.response; else noResponse" class="response-data">
-            <div *ngFor="let key of objectKeys(item.response.a)" class="response-row">
-              <strong>{{ key }}:</strong>
-              <ng-container *ngIf="item.response.a[key] !== null; let value = item.response.a[key]; else nullValue">
-                <ng-container *ngIf="isArray(value); else notArray">
-                  {{ value.join(', ') }}
-                </ng-container>
-                <ng-template #notArray>
-                  {{ value }}
-                </ng-template>
-              </ng-container>
-              <ng-template #nullValue>
-                <em>null</em>
-              </ng-template>
+  <div class="header">
+    <h1>{{ title() }}</h1>
+    <p>Real-time MQTT Response Monitoring Dashboard</p>
+  </div>
+  
+  <div class="tracking-section">
+    <h2 class="section-title">Response Tracking</h2>
+    <table class="tracking-table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Status</th>
+          <th>Next Update</th>
+          <th>Response Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of responseItems">
+          <td class="item-name">{{ item.name }}</td>
+          <td>
+            <span [class]="item.status === 'Received' ? 'status status-received' : 'status status-waiting'">
+              {{ item.status }}
+            </span>
+          </td>
+          <td>
+            <div class="timer" *ngIf="item.timer > 0">{{ item.timer }}s</div>
+            <div *ngIf="item.timer === 0" class="timer" style="color: #ccc;">Standby</div>
+          </td>
+          <td>
+            <div *ngIf="item.response; else noResponse" 
+                 class="response-data" 
+                 [class.highlight]="item.highlight">
+              <div class="response-content">
+                <div *ngFor="let key of objectKeys(item.response!.a)" class="response-row">
+                  <strong>{{ key }}:</strong>
+                  <ng-container *ngIf="item.response!.a[key] !== null; let value = item.response!.a[key]; else nullValue">
+                    <ng-container *ngIf="isArray(value); else notArray">
+                      {{ value.join(', ') }}
+                    </ng-container>
+                    <ng-template #notArray>
+                      {{ value }}
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #nullValue>
+                    <em>null</em>
+                  </ng-template>
+                </div>
+              </div>
             </div>
-          </div>
-          <ng-template #noResponse>
-            <em>No data received</em>
-          </ng-template>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+            <ng-template #noResponse>
+              <div class="no-response">Waiting for data...</div>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
