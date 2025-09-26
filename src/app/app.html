@@ -5,13 +5,30 @@
   <table class="tracking-table">
     <thead>
       <tr>
-            <div *ngFor="let key of objectKeys(item.response!.a)" class="response-row">
         <th>Item</th>
-              <ng-container *ngIf="isArray(item.response!.a[key]); else notArray">
-                {{ item.response!.a[key].join(', ') }}
+        <th>Status</th>
+        <th>Timer</th>
+        <th>Response Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of responseItems">
+        <td>{{ item.name }}</td>
+        <td [class]="item.status === 'Received' ? 'status-received' : 'status-waiting'">
+          {{ item.status }}
+        </td>
+        <td>
+          <div class="timer" *ngIf="item.timer > 0">Next packet in: {{ item.timer }}s</div>
+        </td>
+        <td>
+          <div *ngIf="item.response; else noResponse" class="response-data">
+            <div *ngFor="let key of objectKeys(item.response.a)" class="response-row">
+              <strong>{{ key }}:</strong>
+              <ng-container *ngIf="isArray(item.response.a[key]); else notArray">
+                {{ item.response.a[key].join(', ') }}
               </ng-container>
               <ng-template #notArray>
-                {{ item.response!.a[key] }}
+                {{ item.response.a[key] }}
               </ng-template>
             </div>
           </div>
@@ -22,3 +39,4 @@
       </tr>
     </tbody>
   </table>
+</div>
