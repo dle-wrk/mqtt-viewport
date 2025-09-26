@@ -24,11 +24,16 @@
           <div *ngIf="item.response; else noResponse" class="response-data">
             <div *ngFor="let key of objectKeys(item.response.a)" class="response-row">
               <strong>{{ key }}:</strong>
-              <ng-container *ngIf="isArray(item.response.a[key]); else notArray">
-                {{ item.response.a[key].join(', ') }}
+              <ng-container *ngIf="item.response.a[key] !== null; let value = item.response.a[key]; else nullValue">
+                <ng-container *ngIf="isArray(value); else notArray">
+                  {{ (value as Array<any>).join(', ') }}
+                </ng-container>
+                <ng-template #notArray>
+                  {{ value }}
+                </ng-template>
               </ng-container>
-              <ng-template #notArray>
-                {{ item.response.a[key] }}
+              <ng-template #nullValue>
+                <em>null</em>
               </ng-template>
             </div>
           </div>
