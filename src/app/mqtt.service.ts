@@ -8,7 +8,7 @@ import * as Paho from 'paho-mqtt';
 export class MqttService {
   private client: Paho.Client;
   private readonly brokerHost = 'broker.emqx.io';
-  private readonly brokerPort = 8083;
+  private readonly brokerPort = 8084;
   private readonly clientId = `client_${Math.random().toString(16).slice(3)}`;
 
   public onMessageArrived: ((topic: string, payload: any) => void) | null =
@@ -35,6 +35,7 @@ export class MqttService {
 
   private connect() {
     this.client.connect({
+      useSSL: true,
       onSuccess: () => {
         console.log('Connected to MQTT broker');
         // Subscribe to response topics after connecting
