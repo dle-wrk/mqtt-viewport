@@ -1,49 +1,42 @@
 <div class="container">
   <h1>{{ title() }}</h1>
-  <h2>AeroLink Response</h2>
-  <div>
-    <div class="timer" *ngIf="aerolinkResponse?.a">Next packet in: {{ aerolinkTimer }}s</div>
-    <table class="response-table">
-      <tbody>
-        <tr *ngIf="!aerolinkResponse?.a">
-          <td colspan="2"><em>Waiting for AeroLink response...</em></td>
-        </tr>
-        <tr *ngFor="let key of objectKeys(aerolinkResponse?.a || {})">
-          <th>{{ key }}</th>
-          <td [ngClass]="{'highlight': aerolinkHighlight}">
-            <ng-container *ngIf="isArray(aerolinkResponse.a[key]); else notArrayAero">
-              {{ aerolinkResponse.a[key].join(', ') }}
-            </ng-container>
-            <ng-template #notArrayAero>
-              {{ aerolinkResponse.a[key] }}
-            </ng-template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <ng-template #noAeroLink><em>No AeroLink response received yet.</em></ng-template>
-
-  <h2>LuminaS Response</h2>
-  <div>
-    <div class="timer" *ngIf="luminaSResponse?.a">Next packet in: {{ luminaSTimer }}s</div>
-    <table class="response-table">
-      <tbody>
-        <tr *ngIf="!luminaSResponse?.a">
-          <td colspan="2"><em>Waiting for LuminaS response...</em></td>
-        </tr>
-        <tr *ngFor="let key of objectKeys(luminaSResponse?.a || {})">
-          <th>{{ key }}</th>
-          <td [ngClass]="{'highlight': luminaSHighlight}">
-            <ng-container *ngIf="isArray(luminaSResponse.a[key]); else notArrayLumina">
-              {{ luminaSResponse.a[key].join(', ') }}
-            </ng-container>
-            <ng-template #notArrayLumina>
-              {{ luminaSResponse.a[key] }}
-            </ng-template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  
+  <h2>Response Tracking</h2>
+  <table class="tracking-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Timer</th>
+        <th>Response Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of responseItems">
+        <td class="item-name">{{ item.name }}</td>
+        <td class="status" [ngClass]="{'received': item.status === 'Received', 'waiting': item.status === 'Waiting...'}">
+          {{ item.status }}
+        </td>
+        <td class="timer">
+          <span *ngIf="item.timer > 0">{{ item.timer }}s</span>
+          <span *ngIf="item.timer === 0 && item.response">-</span>
+        </td>
+        <td class="response-data" [ngClass]="{'highlight': item.highlight}">
+          <div *ngIf="item.response?.a; else noResponse" class="response-content">
+            <div *ngFor="let key of objectKeys(item.response.a)" class="response-row">
+              <strong>{{ key }}:</strong>
+              <ng-container *ngIf="isArray(item.response.a[key]); else notArray">
+                {{ item.response.a[key].join(', ') }}
+              </ng-container>
+              <ng-template #notArray>
+                {{ item.response.a[key] }}
+              </ng-template>
+            </div>
+          </div>
+          <ng-template #noResponse>
+            <em>No data received</em>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>

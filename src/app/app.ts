@@ -12,75 +12,59 @@ import { CommonModule } from '@angular/common';
 export class App {
   public readonly title = signal('MQTTAndroidApp');
 
-  public aerolinkResponse: any = null;
-  public luminaSResponse: any = null;
+  public responseItems = [
+    {
+      name: 'AeroLink',
+      topic: '/AeroLink/Response',
+      status: 'Waiting...',
+      response: null,
+      timer: 0,
+      highlight: false
+    },
+    {
+      name: 'LuminaS',
+      topic: '/LuminaS/Response',
+      status: 'Waiting...',
+      response: null,
+      timer: 0,
+      highlight: false
+    }
+  ];
 
-  public aerolinkTimer: number = 0;
-  public luminaSTimer: number = 0;
-
-  public aerolinkHighlight = false;
-  public luminaSHighlight = false;
-
-  private aerolinkInterval: any = null;
-  private luminaSInterval: any = null;
-  private aerolinkHighlightTimeout: any = null;
-  private luminaSHighlightTimeout: any = null;
+  private intervals: { [key: string]: any } = {};
+  private highlightTimeouts: { [key: string]: any } = {};
   private readonly countdownSeconds = 10;
 
   constructor(private mqttService: MqttService) {
     this.mqttService.onMessageArrived = (topic, payload) => {
-      if (topic.endsWith('/AeroLink/Response')) {
-        this.aerolinkResponse = payload;
-        this.resetAeroLinkTimer();
-        this.highlightAeroLink();
-      } else if (topic.endsWith('/LuminaS/Response')) {
-        this.luminaSResponse = payload;
-        this.resetLuminaSTimer();
-        this.highlightLuminaS();
+      const item = this.responseItems.find(item => topic.endsWith(item.topic));
+      if (item) {
+        item.response = payload;
+        item.status = 'Received';
+        this.resetTimer(item);
+        this.highlightItem(item);
       }
     };
   }
 
-  private highlightAeroLink() {
-    this.aerolinkHighlight = true;
-    if (this.aerolinkHighlightTimeout) {
-      clearTimeout(this.aerolinkHighlightTimeout);
+  private highlightItem(item: any) {
+    item.highlight = true;
+    if (this.highlightTimeouts[item.name]) {
+      clearTimeout(this.highlightTimeouts[item.name]);
     }
-    this.aerolinkHighlightTimeout = setTimeout(() => {
-      this.aerolinkHighlight = false;
+    this.highlightTimeouts[item.name] = setTimeout(() => {
+      item.highlight = false;
     }, 3000);
   }
 
-  private highlightLuminaS() {
-    this.luminaSHighlight = true;
-    if (this.luminaSHighlightTimeout) {
-      clearTimeout(this.luminaSHighlightTimeout);
+  private resetTimer(item: any) {
+    item.timer = this.countdownSeconds;
+    if (this.intervals[item.name]) {
+      clearInterval(this.intervals[item.name]);
     }
-    this.luminaSHighlightTimeout = setTimeout(() => {
-      this.luminaSHighlight = false;
-    }, 3000);
-  }
-
-  private resetAeroLinkTimer() {
-    this.aerolinkTimer = this.countdownSeconds;
-    if (this.aerolinkInterval) {
-      clearInterval(this.aerolinkInterval);
-    }
-    this.aerolinkInterval = setInterval(() => {
-      if (this.aerolinkTimer > 0) {
-        this.aerolinkTimer--;
-      }
-    }, 1000);
-  }
-
-  private resetLuminaSTimer() {
-    this.luminaSTimer = this.countdownSeconds;
-    if (this.luminaSInterval) {
-      clearInterval(this.luminaSInterval);
-    }
-    this.luminaSInterval = setInterval(() => {
-      if (this.luminaSTimer > 0) {
-        this.luminaSTimer--;
+    this.intervals[item.name] = setInterval(() => {
+      if (item.timer > 0) {
+        item.timer--;
       }
     }, 1000);
   }
